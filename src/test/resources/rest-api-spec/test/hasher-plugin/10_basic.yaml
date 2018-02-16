@@ -1,0 +1,73 @@
+setup:
+  - do:
+      index:
+          index:  test_1
+          type:   test
+          id:     1
+          body:   { foo: bar }
+
+  - do:
+      index:
+          index:  test_1
+          type:   test
+          id:     2
+          body:   { foo: baz }
+
+  - do:
+      index:
+          index:  test_1
+          type:   test
+          id:     3
+          body:   { foo: foo }
+
+  - do:
+      indices.refresh: {}
+
+---
+"Basic hash call":
+  - do:
+      hash_field:
+        index:   test_1
+        type:    test
+        body:
+          source:
+            field: foo
+          dest:
+            field: foo_hash
+  - match: {totalHits: 3}
+  - match: {updatedDocuments: 3}
+  - match: {failures: false }
+  - do:
+      indices.refresh: {}
+---
+"Basic hash call with query":
+  - do:
+      hash_field:
+        index:   test_1
+        type:    test
+        body:
+          source:
+            field: foo
+            query: { match_all: {} }
+          dest:
+            field: foo_hash
+  - match: {totalHits: 3}
+  - match: {updatedDocuments: 3}
+  - match: {failures: false }
+---
+"Basic hash call with query filter":
+  - do:
+      hash_field:
+        index:   test_1
+        type:    test
+        body:
+          source:
+            field: foo
+            query:
+              match:
+                _id: 2
+          dest:
+            field: foo_hash
+  - match: {totalHits: 1}
+  - match: {updatedDocuments: 1}
+  - match: {failures: false }

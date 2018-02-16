@@ -1,0 +1,41 @@
+{
+  "hash_field": {
+    "documentation": "",
+    "methods": [
+      "POST"
+    ],
+    "url": {
+      "path": "/{index}/{type}/_hash",
+      "paths": [
+        "/{index}/{type}/_hash"
+      ],
+      "parts": {
+        "index": {
+          "type": "string",
+          "required": true,
+          "description": "Index name to perform action on"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type within an index to perform action on"
+        }
+      },
+      "params": {
+        "timeout": {
+          "type": "time",
+          "default": "1m",
+          "description": "Time each individual bulk request should wait for shards that are unavailable."
+        },
+        "wait_for_completion": {
+          "type": "boolean",
+          "default": false,
+          "description": "Should the request should block until the reindex is complete."
+        }
+      }
+    },
+    "body": {
+      "description": "A query to restrict the operation for which hash has to be performed",
+      "required": true
+    }
+  }
+}
